@@ -29,7 +29,8 @@ class githubApiStudyTest {
     @DisplayName("git init test")
     @Order(1)
     void gitInitTest() throws IOException, GitAPIException {
-    File gitDir = new File("C:\\jgit_test\\git_init_test");
+//    File gitDir = new File("C:\\jgit_test\\git_init_test");
+    File gitDir = new File("C:\\jgit_test\\git_hub_clone_test");
         if(gitDir.exists()){
             FileUtils.deleteDirectory(gitDir);
         }
@@ -63,12 +64,20 @@ class githubApiStudyTest {
                 "mlulucky"
                 , "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"); //access token
 
-        //clone
+        //clone _ 최초
         Git git = Git.cloneRepository()
                 .setURI("https://github.com/mlulucky/gitAPIStudy.git")
                 .setCredentialsProvider(credentialsProvider)
                 .setDirectory(gitDir)
                 .call();
+
+        // pull _ 다운로드+병합
+//        Git git1 = Git.open(gitDir);
+//        git1.pull()
+//                .setCredentialsProvider(credentialsProvider)
+//                .call();
+
+
         Assertions.assertThat(git).isNotNull();
         git.close();
     }
@@ -84,7 +93,7 @@ class githubApiStudyTest {
         //create temp file
         String fileName = UUID.randomUUID().toString();
 
-        String contentToWrite = "Hello File!";
+        String contentToWrite = "Hello File Test!";
         String path = dirPath+"\\"+fileName+".txt";
         Files.write(Paths.get(path), contentToWrite.getBytes());
 
@@ -95,7 +104,6 @@ class githubApiStudyTest {
         //add
         Git git = Git.open(gitDir);
         Assertions.assertThat(git).isNotNull();
-
         AddCommand add = git.add();
         add.addFilepattern(fileName+".txt").call();
 
@@ -111,7 +119,7 @@ class githubApiStudyTest {
 
         //commit
         Git git = Git.open(gitDir);
-        git.commit().setMessage("JGIT commit test").call();
+        git.commit().setMessage("JGIT commit test2").call();
         Assertions.assertThat(git).isNotNull();
 
         git.close();
@@ -135,7 +143,7 @@ class githubApiStudyTest {
         git.push()
                 .setCredentialsProvider(credentialsProvider)
                 .setRemote("https://github.com/mlulucky/gitAPIStudy.git")
-                .setRefSpecs(new RefSpec("origin/main"))
+                .setRefSpecs(new RefSpec("main"))
                 .call();
         Assertions.assertThat(git).isNotNull();
 
